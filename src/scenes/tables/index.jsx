@@ -9,10 +9,15 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "../../Context";
 import SelectMessage from "../global/SelectMessage";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Tables = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const { database, setTable, setSelected } = useContext(Context);
+
+  const [tables, setTables] = useState([]);
 
   const columns = [
     {
@@ -20,6 +25,27 @@ const Tables = () => {
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
+      renderCell: (params) => {
+        return (
+          <>
+            <Link
+              to={"/properties"}
+              style={{ textDecoration: "none", color: colors.grey[100] }}
+            >
+              <h2
+                variant="text"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setSelected("Properties");
+                  setTable(params?.row?.name);
+                }}
+              >
+                {params?.formattedValue}
+              </h2>
+            </Link>
+          </>
+        );
+      },
     },
     {
       field: "edit",
@@ -69,15 +95,12 @@ const Tables = () => {
     },
   ];
 
-  const { database } = useContext(Context);
-
-  const [tables, setTables] = useState([]);
   useEffect(() => {
     const get = async () => {
       try {
         let rows = [];
         const res = await axios.get(`http://localhost:3000/${database}`);
-        res.content.map((row) => rows.push({ name: row }));
+        res.data.content.map((row, i) => rows.push({ name: row, id: i }));
         setTables(rows);
       } catch (err) {
         console.log(err);

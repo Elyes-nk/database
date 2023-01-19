@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -6,12 +6,15 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ListIcon from "@mui/icons-material/List";
-import SnippetFolderIcon from '@mui/icons-material/SnippetFolder';
-import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
+import SnippetFolderIcon from "@mui/icons-material/SnippetFolder";
+import DocumentScannerIcon from "@mui/icons-material/DocumentScanner";
+import { Context } from "../../Context";
 
-const Item = ({ title, to, icon, selected, setSelected }) => {
+const Item = ({ title, to, icon }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { selected, setSelected } = useContext(Context);
+
   return (
     <MenuItem
       active={selected === title}
@@ -31,7 +34,6 @@ const Sidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("DataBases");
 
   return (
     <Box
@@ -116,27 +118,9 @@ const Sidebar = () => {
             >
               Data
             </Typography>
-            <Item
-              title="DataBases"
-              to="/"
-              icon={<SnippetFolderIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Tables"
-              to="/tables"
-              icon={<DocumentScannerIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Properties"
-              to="/properties"
-              icon={<ListIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            <Item title="DataBases" to="/" icon={<SnippetFolderIcon />} />
+            <Item title="Tables" to="/tables" icon={<DocumentScannerIcon />} />
+            <Item title="Properties" to="/properties" icon={<ListIcon />} />
           </Box>
         </Menu>
       </ProSidebar>

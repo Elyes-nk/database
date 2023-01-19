@@ -15,42 +15,37 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "../../Context";
 import SelectMessage from "../global/SelectMessage";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Properties = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { database, table, setProperty } = useContext(Context);
+
   const columns = [
-    { field: "id", headerName: "ID" },
     {
       field: "name",
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
-    },
-    {
-      field: "phone",
-      headerName: "Phone Number",
-      flex: 1,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      flex: 1,
-    },
-    {
-      field: "cost",
-      headerName: "Cost",
-      flex: 1,
-      renderCell: (params) => (
-        <Typography color={colors.greenAccent[500]}>
-          ${params.row.cost}
-        </Typography>
-      ),
-    },
-    {
-      field: "date",
-      headerName: "Date",
-      flex: 1,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link
+              to={"/properties"}
+              style={{ textDecoration: "none", color: colors.grey[100] }}
+            >
+              <h2
+                variant="text"
+                style={{ cursor: "pointer" }}
+                onClick={() => setProperty(params?.row?.name)}
+              >
+                {params?.formattedValue}
+              </h2>
+            </Link>
+          </>
+        );
+      },
     },
     {
       field: "edit",
@@ -100,8 +95,6 @@ const Properties = () => {
     },
   ];
 
-  const { database, table } = useContext(Context);
-
   const [properties, setProperties] = useState([]);
   useEffect(() => {
     const get = async () => {
@@ -110,7 +103,8 @@ const Properties = () => {
         const res = await axios.get(
           `http://localhost:3000/${database}/${table}`
         );
-        res.content.map((row) => rows.push({ name: row }));
+        res.data.content.map((row, i) => rows.push({ name: row, id: i }));
+
         setProperties(rows);
       } catch (err) {
         console.log(err);
