@@ -10,6 +10,7 @@ import { Context } from "../../Context";
 import SelectMessage from "../global/SelectMessage";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 const Tables = () => {
   const theme = useTheme();
@@ -18,6 +19,14 @@ const Tables = () => {
   const { database, setTable, setSelected } = useContext(Context);
 
   const [tables, setTables] = useState([]);
+
+  async function deleteRow(name) {
+    try {
+      await axios.delete(`http://localhost:3000/${database}/${name}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const columns = [
     {
@@ -74,7 +83,7 @@ const Tables = () => {
       field: "delete",
       headerName: "",
       flex: 1,
-      renderCell: () => {
+      renderCell: (params) => {
         return (
           <Box
             width="60%"
@@ -84,6 +93,7 @@ const Tables = () => {
             justifyContent="center"
             backgroundColor={colors.redAccent[600]}
             borderRadius="4px"
+            onClick={() => deleteRow(params?.row?.name)}
           >
             <DeleteOutlineIcon />
             <Typography color={colors.primary[100]} sx={{ ml: "5px" }}>
@@ -115,9 +125,29 @@ const Tables = () => {
         title="TABLES"
         subtitle={`List of Tables of ${database || "..."}`}
       />
+      <Link
+        to={"/create"}
+        state={{ context: "table" }}
+        style={{ textDecoration: "none", color: colors.grey[100] }}
+      >
+        <Box
+          width="160px"
+          p="5px"
+          display="flex"
+          justifyContent="center"
+          backgroundColor={colors.greenAccent[600]}
+          borderRadius="4px"
+          marginTop="10px"
+        >
+          <AddIcon />
+          <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+            Create new database
+          </Typography>
+        </Box>
+      </Link>
       <Box
-        m="40px 0 0 0"
         height="75vh"
+        marginTop="32px"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",

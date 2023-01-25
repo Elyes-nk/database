@@ -8,6 +8,8 @@ import Properties from "./scenes/properties";
 import Databases from "./scenes/databases";
 import Tables from "./scenes/tables";
 import { ContextProvider } from "./Context";
+import Edit from "./scenes/edit";
+import Create from "./scenes/create";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -26,6 +28,8 @@ function App() {
                 <Route path="/" element={<Databases />} />
                 <Route path="/tables" element={<Tables />} />
                 <Route path="/properties" element={<Properties />} />
+                <Route path="/edit" element={<Edit />} />
+                <Route path="/create" element={<Create />} />
               </Routes>
             </main>
           </div>

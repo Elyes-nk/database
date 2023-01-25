@@ -16,11 +16,20 @@ import { Context } from "../../Context";
 import SelectMessage from "../global/SelectMessage";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 const Properties = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { database, table, setProperty } = useContext(Context);
+
+  async function deleteRow(name) {
+    try {
+      await axios.delete(`http://localhost:3000/${database}/${table}/${name}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const columns = [
     {
@@ -74,7 +83,7 @@ const Properties = () => {
       field: "delete",
       headerName: "",
       flex: 1,
-      renderCell: () => {
+      renderCell: (params) => {
         return (
           <Box
             width="60%"
@@ -84,6 +93,7 @@ const Properties = () => {
             justifyContent="center"
             backgroundColor={colors.redAccent[600]}
             borderRadius="4px"
+            onClick={() => deleteRow(params?.row?.name)}
           >
             <DeleteOutlineIcon />
             <Typography color={colors.primary[100]} sx={{ ml: "5px" }}>
@@ -119,10 +129,31 @@ const Properties = () => {
         title="PROPERTIES"
         subtitle={`List of Properties of Table ${table || "..."}`}
       />
+      <Link
+        to={"/create"}
+        state={{ context: "property" }}
+        style={{ textDecoration: "none", color: colors.grey[100] }}
+      >
+        <Box
+          width="160px"
+          p="5px"
+          display="flex"
+          justifyContent="center"
+          backgroundColor={colors.greenAccent[600]}
+          borderRadius="4px"
+          marginTop="10px"
+        >
+          <AddIcon />
+          <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+            Create new database
+          </Typography>
+        </Box>
+      </Link>
       <Box
         display="flex"
         backgroundColor={colors.primary[400]}
         borderRadius="3px"
+        marginTop="20px"
       >
         <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
         <IconButton type="button" sx={{ p: 1 }}>
