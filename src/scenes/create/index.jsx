@@ -10,6 +10,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Context } from "../../Context";
 import SaveIcon from "@mui/icons-material/Save";
 import TextareaAutosize from "@mui/base/TextareaAutosize";
+import { useNavigate } from "react-router-dom";
 
 const Create = () => {
   const theme = useTheme();
@@ -20,7 +21,8 @@ const Create = () => {
   const [body, setBody] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const { database, table } = useContext(Context);
+  const { database, table, property } = useContext(Context);
+  const navigate = useNavigate();
 
   const url = `http://localhost:3000/${
     context === "database"
@@ -35,8 +37,19 @@ const Create = () => {
   async function save() {
     setIsLoading(true);
     try {
-      await axios.post(url, { body });
+      await axios.put(url, body, {
+        headers: {
+          "Content-type": "text/plain",
+        },
+      });
       setIsLoading(false);
+      navigate(
+        context === "property"
+          ? "/properties"
+          : context === "table"
+          ? "/tables"
+          : "/"
+      );
     } catch (err) {
       console.log(err);
     }
@@ -46,13 +59,13 @@ const Create = () => {
     <Box m="20px">
       <Header
         title="Create"
-        subtitle={`Create ${context} ${
+        subtitle={` ${
           context === "table"
-            ? "in database " + database
+            ? database + "/"
             : context === "property"
-            ? "in table " + table
+            ? database + "/" + table + "/"
             : ""
-        }`}
+        }Create ${context}`}
       />
       <Box
         m="40px 0 0 0"

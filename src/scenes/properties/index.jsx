@@ -124,12 +124,9 @@ const Properties = () => {
   useEffect(() => {
     const get = async () => {
       try {
-        let rows = [];
         const res = await axios.get(
           `http://localhost:3000/${database}/${table}`
         );
-        // res.data.content.map((row, i) => rows.push({ name: row, id: i }));
-
         setProperties(res.data.content);
       } catch (err) {
         console.log(err);
@@ -144,7 +141,7 @@ const Properties = () => {
         title="PROPERTIES"
         subtitle={`${
           database && table
-            ? database + "/" + table + "/properties"
+            ? database + "/" + table + "/Properties"
             : "no database/table selected"
         }`}
       />

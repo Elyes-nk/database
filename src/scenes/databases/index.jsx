@@ -123,7 +123,7 @@ const Databases = () => {
 
   return (
     <Box m="20px">
-      <Header title="DATABASES" subtitle="List of Databases" />
+      <Header title="DATABASES" subtitle="Databases" />
       <Link
         to={"/create"}
         state={{ context: "database" }}

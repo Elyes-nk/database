@@ -20,10 +20,25 @@ const Tables = () => {
   const { database, setTable, setSelected } = useContext(Context);
 
   const [tables, setTables] = useState([]);
+  const [search, setSearch] = useState("");
 
   async function deleteRow(name) {
     try {
       await axios.delete(`http://localhost:3000/${database}/${name}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function onSearch() {
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/${database}/${search}`,
+        {
+          body: "",
+        }
+      );
+      setTables(res.data.content);
     } catch (err) {
       console.log(err);
     }
@@ -130,7 +145,7 @@ const Tables = () => {
     <Box m="20px">
       <Header
         title="TABLES"
-        subtitle={`${database ? database + "/tables" : "no database selected"}`}
+        subtitle={`${database ? database + "/Tables" : "no database selected"}`}
       />
       <Link
         to={"/create"}
@@ -158,8 +173,12 @@ const Tables = () => {
         borderRadius="3px"
         marginTop="20px"
       >
-        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
-        <IconButton type="button" sx={{ p: 1 }}>
+        <InputBase
+          sx={{ ml: 2, flex: 1 }}
+          placeholder="Search"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <IconButton type="button" sx={{ p: 1 }} onClick={() => search()}>
           <SearchIcon />
         </IconButton>
       </Box>

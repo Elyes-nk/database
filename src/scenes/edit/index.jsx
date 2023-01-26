@@ -45,7 +45,11 @@ const Edit = () => {
   async function save() {
     setIsLoading(true);
     try {
-      await axios.post(url, { body });
+      await axios.post(url, body, {
+        headers: {
+          "Content-type": "text/plain",
+        },
+      });
       setIsLoading(false);
     } catch (err) {
       console.log(err);
