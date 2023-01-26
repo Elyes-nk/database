@@ -151,7 +151,7 @@ const Properties = () => {
         >
           <AddIcon />
           <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-            Create new database
+            Create new property
           </Typography>
         </Box>
       </Link>

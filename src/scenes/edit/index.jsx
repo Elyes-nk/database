@@ -57,8 +57,8 @@ const Edit = () => {
   return (
     <Box m="20px">
       <Header
-        title="Create"
-        subtitle={`Create ${context} ${
+        title="Edit"
+        subtitle={`Edit ${context} ${
           context === "table"
             ? "in database " + database
             : context === "property"
@@ -102,23 +102,19 @@ const Edit = () => {
         >
           Name
         </Typography>
-        <Box
-          display="flex"
-          backgroundColor={colors.primary[400]}
-          borderRadius="3px"
+        <Typography
+          variant="h3"
+          color={colors.grey[100]}
+          sx={{ m: "15px 0 5px 20px" }}
         >
-          <InputBase
-            sx={{ ml: 2, flex: 1, m: "15px 0 15px 20px" }}
-            placeholder={`Insert a ${context} name...`}
-            // onChange={(e) => setName(e.target.value)}
-          />
-        </Box>
+          {selectedRow}
+        </Typography>
         <Typography
           variant="h4"
           color={colors.grey[300]}
           sx={{ m: "15px 0 5px 20px" }}
         >
-          Body
+          {context === "database" ? "Tables" : context === "table" ? "Properties" : "Body"}
         </Typography>
         <Box
           display="flex"

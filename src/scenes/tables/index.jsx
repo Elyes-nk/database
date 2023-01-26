@@ -147,7 +147,7 @@ const Tables = () => {
         >
           <AddIcon />
           <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-            Create new database
+            Create new table
           </Typography>
         </Box>
       </Link>
