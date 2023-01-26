@@ -1,9 +1,6 @@
-import { Box, InputBase, Typography, useTheme } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Box, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
@@ -37,6 +34,7 @@ const Edit = () => {
     const get = async () => {
       try {
         const res = await axios.get(url);
+        setBody(`{${res.data.content.map((el) => `\n${el}:{...}`)}\n}`);
       } catch (err) {
         console.log(err);
       }
@@ -114,7 +112,11 @@ const Edit = () => {
           color={colors.grey[300]}
           sx={{ m: "15px 0 5px 20px" }}
         >
-          {context === "database" ? "Tables" : context === "table" ? "Properties" : "Body"}
+          {context === "database"
+            ? "Tables"
+            : context === "table"
+            ? "Properties"
+            : "Body"}
         </Typography>
         <Box
           display="flex"
@@ -123,7 +125,6 @@ const Edit = () => {
         >
           <TextareaAutosize
             aria-label="empty textarea"
-            placeholder="Empty"
             style={{
               width: "100%",
               backgroundColor: colors.grey[900],
@@ -131,6 +132,7 @@ const Edit = () => {
             }}
             minRows="10"
             onChange={(e) => setBody(e.target.value)}
+            placeholder={body}
           />
         </Box>
         <Box

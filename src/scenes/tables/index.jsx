@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, InputBase, Typography } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -11,6 +11,7 @@ import SelectMessage from "../global/SelectMessage";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Tables = () => {
   const theme = useTheme();
@@ -129,7 +130,7 @@ const Tables = () => {
     <Box m="20px">
       <Header
         title="TABLES"
-        subtitle={`List of Tables of ${database || "..."}`}
+        subtitle={`${database ? database + "/tables" : "no database selected"}`}
       />
       <Link
         to={"/create"}
@@ -151,6 +152,17 @@ const Tables = () => {
           </Typography>
         </Box>
       </Link>
+      <Box
+        display="flex"
+        backgroundColor={colors.primary[400]}
+        borderRadius="3px"
+        marginTop="20px"
+      >
+        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
+        <IconButton type="button" sx={{ p: 1 }}>
+          <SearchIcon />
+        </IconButton>
+      </Box>
       <Box
         height="75vh"
         marginTop="32px"

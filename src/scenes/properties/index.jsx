@@ -10,7 +10,6 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import SearchIcon from "@mui/icons-material/Search";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../../Context";
 import SelectMessage from "../global/SelectMessage";
@@ -55,6 +54,16 @@ const Properties = () => {
           </>
         );
       },
+    },
+    {
+      field: "age",
+      headerName: "Age",
+      flex: 1,
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      flex: 1,
     },
     {
       field: "edit",
@@ -119,9 +128,9 @@ const Properties = () => {
         const res = await axios.get(
           `http://localhost:3000/${database}/${table}`
         );
-        res.data.content.map((row, i) => rows.push({ name: row, id: i }));
+        // res.data.content.map((row, i) => rows.push({ name: row, id: i }));
 
-        setProperties(rows);
+        setProperties(res.data.content);
       } catch (err) {
         console.log(err);
       }
@@ -133,7 +142,11 @@ const Properties = () => {
     <Box m="20px">
       <Header
         title="PROPERTIES"
-        subtitle={`List of Properties of Table ${table || "..."}`}
+        subtitle={`${
+          database && table
+            ? database + "/" + table + "/properties"
+            : "no database/table selected"
+        }`}
       />
       <Link
         to={"/create"}
@@ -155,17 +168,6 @@ const Properties = () => {
           </Typography>
         </Box>
       </Link>
-      <Box
-        display="flex"
-        backgroundColor={colors.primary[400]}
-        borderRadius="3px"
-        marginTop="20px"
-      >
-        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
-        <IconButton type="button" sx={{ p: 1 }}>
-          <SearchIcon />
-        </IconButton>
-      </Box>
       <Box
         m="40px 0 0 0"
         height="75vh"
