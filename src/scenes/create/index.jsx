@@ -22,14 +22,15 @@ const Create = () => {
 
   const { database, table } = useContext(Context);
 
-  const url =
-    "http://localhost:3000/" + context === "database"
+  const url = `http://localhost:3000/${
+    context === "database"
       ? name
       : context === "table"
       ? database + "/" + name
       : context === "property"
       ? database + "/" + table + "/" + name
-      : "";
+      : ""
+  }`;
 
   async function save() {
     setIsLoading(true);
@@ -47,7 +48,7 @@ const Create = () => {
         title="Create"
         subtitle={`Create ${context} ${
           context === "table"
-            ? "in database " + database 
+            ? "in database " + database
             : context === "property"
             ? "in table " + table
             : ""
@@ -97,12 +98,9 @@ const Create = () => {
           <InputBase
             sx={{ ml: 2, flex: 1, m: "15px 0 15px 20px" }}
             placeholder={`Insert a ${context} name...`}
-            onChange={(e) => setName({ name: e.target.value })}
+            onChange={(e) => setName(e.target.value)}
           />
         </Box>
-        {context === "database" && <></>}
-        {context === "database" && <></>}
-        {context === "property" && <></>}
         <Typography
           variant="h4"
           color={colors.grey[300]}

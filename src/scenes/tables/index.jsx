@@ -60,7 +60,7 @@ const Tables = () => {
       field: "edit",
       headerName: "",
       flex: 1,
-      renderCell: () => {
+      renderCell: (params) => {
         return (
           <Box
             width="60%"
@@ -73,7 +73,13 @@ const Tables = () => {
           >
             <EditIcon />
             <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              Edit
+              <Link
+                to={"/edit"}
+                state={{ context: "table", selectedRow: params?.row?.name }}
+                style={{ textDecoration: "none", color: colors.grey[100] }}
+              >
+                Edit
+              </Link>
             </Typography>
           </Box>
         );
