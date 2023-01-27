@@ -11,34 +11,32 @@ import SelectMessage from "../global/SelectMessage";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import SearchIcon from "@mui/icons-material/Search";
 
 const Tables = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   const { database, setTable, setSelected } = useContext(Context);
-
   const [tables, setTables] = useState([]);
-  const [search, setSearch] = useState("");
+
+  const get = async () => {
+    try {
+      let rows = [];
+      const res = await axios.get(`http://localhost:3000/${database}`);
+      res.data.content.map((row, i) => rows.push({ name: row, id: i }));
+      setTables(rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    get();
+  }, []);
 
   async function deleteRow(name) {
     try {
       await axios.delete(`http://localhost:3000/${database}/${name}`);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async function onSearch() {
-    try {
-      const res = await axios.get(
-        `http://localhost:3000/${database}/${search}`,
-        {
-          body: "",
-        }
-      );
-      setTables(res.data.content);
+      get();
     } catch (err) {
       console.log(err);
     }
@@ -127,20 +125,6 @@ const Tables = () => {
     },
   ];
 
-  useEffect(() => {
-    const get = async () => {
-      try {
-        let rows = [];
-        const res = await axios.get(`http://localhost:3000/${database}`);
-        res.data.content.map((row, i) => rows.push({ name: row, id: i }));
-        setTables(rows);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    get();
-  }, [database]);
-
   return (
     <Box m="20px">
       <Header
@@ -167,24 +151,10 @@ const Tables = () => {
           </Typography>
         </Box>
       </Link>
+
       <Box
-        display="flex"
-        backgroundColor={colors.primary[400]}
-        borderRadius="3px"
-        marginTop="20px"
-      >
-        <InputBase
-          sx={{ ml: 2, flex: 1 }}
-          placeholder="Search"
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <IconButton type="button" sx={{ p: 1 }} onClick={() => search()}>
-          <SearchIcon />
-        </IconButton>
-      </Box>
-      <Box
-        height="75vh"
-        marginTop="32px"
+        m="5px 0 0 0"
+        height="70vh"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",

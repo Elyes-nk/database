@@ -16,9 +16,25 @@ const Databases = () => {
 
   const { setDatabase, setSelected } = useContext(Context);
 
+  const get = async () => {
+    try {
+      let rows = [];
+      const res = await axios.get(`http://localhost:3000/`);
+      res.data.content.map((row, i) => rows.push({ name: row, id: i }));
+      setDatabases(rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    get();
+  }, []);
+
   async function deleteRow(name) {
     try {
       await axios.delete(`http://localhost:3000/${name}`);
+      get();
     } catch (err) {
       console.log(err);
     }
@@ -107,20 +123,6 @@ const Databases = () => {
     },
   ];
 
-  useEffect(() => {
-    const get = async () => {
-      try {
-        let rows = [];
-        const res = await axios.get(`http://localhost:3000/`);
-        res.data.content.map((row, i) => rows.push({ name: row, id: i }));
-        setDatabases(rows);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    get();
-  }, []);
-
   return (
     <Box m="20px">
       <Header title="DATABASES" subtitle="Databases" />
@@ -146,7 +148,8 @@ const Databases = () => {
       </Link>
 
       <Box
-        height="75vh"
+        m="5px 0 0 0"
+        height="70vh"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -170,6 +173,9 @@ const Databases = () => {
           },
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
+          },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            color: `${colors.grey[100]} !important`,
           },
         }}
       >

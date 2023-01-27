@@ -5,7 +5,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,18 +16,47 @@ import SelectMessage from "../global/SelectMessage";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Properties = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { database, table, setProperty } = useContext(Context);
+  const [properties, setProperties] = useState([]);
+  const [params, setParams] = useState([]);
+
+  const get = async () => {
+    try {
+      let rows = [];
+      const res = await axios.get(
+        `http://localhost:3000/${database}/${table}${
+          params.length > 0
+            ? `?${params.map((param) => param.name + "=" + param.value)}`
+            : ""
+        }`
+      );
+      res.data.content.map((row, i) => rows.push({ ...row, id: i }));
+      setProperties(rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    get();
+  }, []);
 
   async function deleteRow(name) {
     try {
       await axios.delete(`http://localhost:3000/${database}/${table}/${name}`);
+      get();
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async function onSearch() {
+    get();
   }
 
   const columns = [
@@ -120,21 +149,6 @@ const Properties = () => {
     },
   ];
 
-  const [properties, setProperties] = useState([]);
-  useEffect(() => {
-    const get = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:3000/${database}/${table}`
-        );
-        setProperties(res.data.content);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    get();
-  }, [database, table]);
-
   return (
     <Box m="20px">
       <Header
@@ -166,8 +180,23 @@ const Properties = () => {
         </Box>
       </Link>
       <Box
-        m="40px 0 0 0"
-        height="75vh"
+        display="flex"
+        backgroundColor={colors.primary[400]}
+        borderRadius="3px"
+        marginTop="20px"
+      >
+        <InputBase
+          sx={{ ml: 2, flex: 1 }}
+          placeholder="Search"
+          onChange={(e) => setParams([e.target.value])}
+        />
+        <IconButton type="button" sx={{ p: 1 }} onClick={() => onSearch()}>
+          <SearchIcon />
+        </IconButton>
+      </Box>
+      <Box
+        m="5px 0 0 0"
+        height="63vh"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -192,12 +221,19 @@ const Properties = () => {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            color: `${colors.grey[100]} !important`,
+          },
         }}
       >
         {!database && !table ? (
           <SelectMessage name="Tables" to="/tables" />
         ) : (
-          <DataGrid rows={properties} columns={columns} />
+          <DataGrid
+            rows={properties}
+            columns={columns}
+            components={{ Toolbar: GridToolbar }}
+          />
         )}
       </Box>
     </Box>
