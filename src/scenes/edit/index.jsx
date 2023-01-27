@@ -45,7 +45,7 @@ const Edit = () => {
   async function save() {
     setIsLoading(true);
     try {
-      await axios.post(url, body, {
+      await axios.put(url, body, {
         headers: {
           "Content-type": "text/plain",
         },
@@ -136,7 +136,7 @@ const Edit = () => {
             }}
             minRows="10"
             onChange={(e) => setBody(e.target.value)}
-            placeholder={body}
+            placeholder={JSON.stringify(body)}
           />
         </Box>
         <Box

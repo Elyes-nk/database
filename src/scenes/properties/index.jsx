@@ -35,7 +35,9 @@ const Properties = () => {
             : ""
         }`
       );
-      res.data.content.map((row, i) => rows.push({ ...row, id: i }));
+      res.data.content.map((row, i) =>
+        rows.push({ value: JSON.stringify(row), id: i })
+      );
       setProperties(rows);
     } catch (err) {
       console.log(err);
@@ -60,40 +62,40 @@ const Properties = () => {
   }
 
   const columns = [
+    // {
+    //   field: "name",
+    //   headerName: "Name",
+    //   flex: 1,
+    //   cellClassName: "name-column--cell",
+    //   renderCell: (params) => {
+    //     return (
+    //       <>
+    //         <Link
+    //           to={"/properties"}
+    //           style={{ textDecoration: "none", color: colors.grey[100] }}
+    //         >
+    //           <h2
+    //             variant="text"
+    //             style={{ cursor: "pointer" }}
+    //             onClick={() => setProperty(params?.row?.name)}
+    //           >
+    //             {params?.formattedValue}
+    //           </h2>
+    //         </Link>
+    //       </>
+    //     );
+    //   },
+    // },
     {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
-      cellClassName: "name-column--cell",
-      renderCell: (params) => {
-        return (
-          <>
-            <Link
-              to={"/properties"}
-              style={{ textDecoration: "none", color: colors.grey[100] }}
-            >
-              <h2
-                variant="text"
-                style={{ cursor: "pointer" }}
-                onClick={() => setProperty(params?.row?.name)}
-              >
-                {params?.formattedValue}
-              </h2>
-            </Link>
-          </>
-        );
-      },
-    },
-    {
-      field: "age",
-      headerName: "Age",
-      flex: 1,
-    },
-    {
-      field: "email",
-      headerName: "Email",
+      field: "value",
+      headerName: "Content",
       flex: 1,
     },
+    // {
+    //   field: "email",
+    //   headerName: "Email",
+    //   flex: 1,
+    // },
     {
       field: "edit",
       headerName: "",
